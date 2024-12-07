@@ -1,6 +1,10 @@
-from .models import*
+from rest_framework.permissions import IsAuthenticated
+
+from .permissions import IsClient,IsNotHotelOwner
+from .models import *
 from rest_framework import viewsets
 from .serializers import *
+
 
 
 
@@ -42,3 +46,8 @@ class RoomDetailViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset =Review.objects.all()
     serializer_class =ReviewSerializer
+
+class BookingViewSet(viewsets.ModelViewSet):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+    permission_classes = [IsAuthenticated, IsClient]
