@@ -29,10 +29,22 @@ class Hotel(models.Model):
     description = models.TextField()
     address = models.CharField(max_length=32)
     hotel_video = models.FileField(upload_to='hotel_video/')
-    stars = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    stars = models.PositiveSmallIntegerField(choices=[(i, str(i)) for i in range(6)], verbose_name='Рейтинг')
+    breakfast = models.BooleanField(default=True, verbose_name="Хороший завтрак")
+    restaurant = models.BooleanField(default=True, verbose_name="Ресторан")
+    parking = models.BooleanField(default=False, verbose_name="Парковка")
+    fitness = models.BooleanField(default=False, verbose_name='Фитнес-центр')
 
     def __str__(self):
-        return f'{self.hotel_name} - {self.country}'
+        return (f'{self.hotel_name} - {self.country} - {self.breakfast} - {self.parking} - {self.restaurant} - {self.fitness} '
+                f' - {self.city} - {self.owner}')
+
+
+    def get_avg_rating(self):
+        ratings = self.comments.all()
+        if ratings.exists():
+            return round(sum(i.stars for i in ratings) / ratings.count(), 1)
+        return 0
 
 
 class HotelPhotos(models.Model):
@@ -85,3 +97,4 @@ class Review(models.Model):
 
     def __str__(self):
         return f' {self.user_name},{ self.hotel} - {self.stars}'
+

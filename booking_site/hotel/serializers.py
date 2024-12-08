@@ -32,14 +32,8 @@ class HotelDetailSerializer(serializers.ModelSerializer):
     hotel = HotelPhotosSerializer(read_only=True, many=True)
     class Meta:
         model = Hotel
-        fields = ['hotel_name', 'country', 'city', 'stars', 'owner',
+        fields = ['hotel_name', 'country', 'city', 'stars', 'owner', 'fitness', 'breakfast', 'restaurant','parking',
                   'description', 'address', 'hotel', 'hotel_video']
-
-
-class RoomListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Room
-        fields = ['room_number', 'room_price', 'type', 'room', 'all_inclusive']
 
 
 class RoomPhotosSerializer(serializers.ModelSerializer):
@@ -48,11 +42,24 @@ class RoomPhotosSerializer(serializers.ModelSerializer):
         fields = ['room_image']
 
 
+class RoomListSerializer(serializers.ModelSerializer):
+    photos = RoomPhotosSerializer(read_only=True, many=True)
+    class Meta:
+        model = Room
+        fields = ['room_number', 'room_price', 'type', 'photos', 'all_inclusive']
+
+
+# class RoomPhotosSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = RoomPhotos
+#         fields = ['room_image']
+
+
 class RoomDetailSerializer(serializers.ModelSerializer):
     photos = RoomPhotosSerializer(read_only=True, many=True)
     class Meta:
         model = Room
-        fields = ['room_number', 'hotel_room', 'room_price', 'room_photos', 'type', 'room', 'all_inclusive' 'room_description']
+        fields = ['room_number', 'hotel_room', 'room_price', 'type', 'photos', 'all_inclusive', 'room_description']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
