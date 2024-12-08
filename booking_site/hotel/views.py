@@ -1,9 +1,13 @@
-from .models import*
+from rest_framework.permissions import IsAuthenticated
+from .models import *
 from rest_framework import viewsets
+
+from .permissions import CheckBooking, UseCRUD, CreateReview
 from .serializers import *
 from .filters import HotelFilter, RoomFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+
 
 
 
@@ -19,6 +23,7 @@ class HotelListViewSet(viewsets.ModelViewSet):
     filterset_class = HotelFilter
     search_fields = ['hotel_name']
     ordering_fields = ['stars']
+    permission_classes = [UseCRUD]
 
 
 class HotelPhotosViewSet(viewsets.ModelViewSet):
@@ -26,9 +31,11 @@ class HotelPhotosViewSet(viewsets.ModelViewSet):
     serializer_class =HotelPhotosSerializer
 
 
+
 class HotelDetailViewSet(viewsets.ModelViewSet):
     queryset =Hotel.objects.all()
-    serializer_class =HotelDetailSerializer
+    serializer_class = HotelDetailSerializer
+    permission_classes = [UseCRUD]
 
 
 class RoomListViewSet(viewsets.ModelViewSet):
@@ -53,3 +60,9 @@ class RoomDetailViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset =Review.objects.all()
     serializer_class =ReviewSerializer
+    permission_classes = [CreateReview]
+
+class BookingViewSet(viewsets.ModelViewSet):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+    permission_classes = [CheckBooking,]

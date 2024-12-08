@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import *
 
 
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
@@ -30,6 +32,7 @@ class HotelPhotosSerializer(serializers.ModelSerializer):
 
 class HotelDetailSerializer(serializers.ModelSerializer):
     hotel = HotelPhotosSerializer(read_only=True, many=True)
+    owner = UserProfileSimpleSerializer()
     class Meta:
         model = Hotel
         fields = ['hotel_name', 'country', 'city', 'stars', 'owner', 'fitness', 'breakfast', 'restaurant','parking',
@@ -66,3 +69,8 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
+
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = ['user', 'room', 'check_in', 'check_out', 'status', 'created_at', 'canceled_at']

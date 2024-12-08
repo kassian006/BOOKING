@@ -24,7 +24,7 @@ class UserProfile(AbstractUser):
 class Hotel(models.Model):
     hotel_name = models.CharField(max_length=40)
     country = models.CharField(max_length=32)
-    owner = models.CharField(max_length=32)
+    owner = models.ForeignKey(UserProfile, related_name='owner',on_delete=models.CASCADE)
     city = models.CharField(max_length=16)
     description = models.TextField()
     address = models.CharField(max_length=32)
@@ -98,3 +98,18 @@ class Review(models.Model):
     def __str__(self):
         return f' {self.user_name},{ self.hotel} - {self.stars}'
 
+
+class Booking(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    check_in = models.DateTimeField()
+    check_out = models.DateTimeField()
+    status = models.CharField(max_length=50, choices=[
+        ('booked', 'Booked'),
+        ('canceled', 'Canceled'),
+        ('completed', 'Completed')])
+    created_at = models.DateTimeField(auto_now_add=True)
+    canceled_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Booking {self.id} by {self.user.username}"
